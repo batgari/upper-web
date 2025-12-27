@@ -41,24 +41,24 @@ CREATE POLICY "Enable read access for all users" ON hospitals
 CREATE POLICY "Enable read access for all users" ON doctors
   FOR SELECT USING (true);
 
--- 관리자만 쓰기 가능하도록 정책 설정 (추후 인증 추가 시 수정)
-CREATE POLICY "Enable insert for authenticated users only" ON hospitals
-  FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+-- 개발 단계: 모든 사용자가 쓰기 가능 (추후 인증 추가 시 수정)
+CREATE POLICY "Enable insert for all users" ON hospitals
+  FOR INSERT WITH CHECK (true);
 
-CREATE POLICY "Enable update for authenticated users only" ON hospitals
-  FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Enable update for all users" ON hospitals
+  FOR UPDATE USING (true);
 
-CREATE POLICY "Enable delete for authenticated users only" ON hospitals
-  FOR DELETE USING (auth.role() = 'authenticated');
+CREATE POLICY "Enable delete for all users" ON hospitals
+  FOR DELETE USING (true);
 
-CREATE POLICY "Enable insert for authenticated users only" ON doctors
-  FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Enable insert for all users" ON doctors
+  FOR INSERT WITH CHECK (true);
 
-CREATE POLICY "Enable update for authenticated users only" ON doctors
-  FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Enable update for all users" ON doctors
+  FOR UPDATE USING (true);
 
-CREATE POLICY "Enable delete for authenticated users only" ON doctors
-  FOR DELETE USING (auth.role() = 'authenticated');
+CREATE POLICY "Enable delete for all users" ON doctors
+  FOR DELETE USING (true);
 
 -- 샘플 데이터 (선택사항)
 -- INSERT INTO hospitals (name, address, phone, region) VALUES
