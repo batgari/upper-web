@@ -52,7 +52,6 @@ export default function DoctorsPage() {
       hospital_id: formData.get('hospital_id') as string,
       bio: formData.get('bio') as string,
       experience_years: parseInt(formData.get('experience_years') as string),
-      region: formData.get('region') as string,
       available_hours: formData.get('available_hours') as string,
       photo_url: formData.get('photo_url') as string || null,
     };
@@ -109,7 +108,7 @@ export default function DoctorsPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.specialty}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.sub_specialty || '-'}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.hospital?.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.region}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.hospital?.region}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.experience_years}년</td>
                     </tr>
                   ))}
@@ -143,7 +142,7 @@ export default function DoctorsPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-500">지역:</span>
-                    <span className="text-gray-700">{doctor.region}</span>
+                    <span className="text-gray-700">{doctor.hospital?.region}</span>
                   </div>
                 </div>
               </div>
@@ -219,50 +218,20 @@ export default function DoctorsPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">소속 병원 *</label>
-                  <select
-                    name="hospital_id"
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="">선택</option>
-                    {hospitals.map((hospital) => (
-                      <option key={hospital.id} value={hospital.id}>
-                        {hospital.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">지역 *</label>
-                  <select
-                    name="region"
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="">선택</option>
-                    <option value="서울">서울</option>
-                    <option value="경기">경기</option>
-                    <option value="인천">인천</option>
-                    <option value="부산">부산</option>
-                    <option value="대구">대구</option>
-                    <option value="광주">광주</option>
-                    <option value="대전">대전</option>
-                    <option value="울산">울산</option>
-                    <option value="세종">세종</option>
-                    <option value="강원">강원</option>
-                    <option value="충북">충북</option>
-                    <option value="충남">충남</option>
-                    <option value="전북">전북</option>
-                    <option value="전남">전남</option>
-                    <option value="경북">경북</option>
-                    <option value="경남">경남</option>
-                    <option value="제주">제주</option>
-                  </select>
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">소속 병원 *</label>
+                <select
+                  name="hospital_id"
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">선택</option>
+                  {hospitals.map((hospital) => (
+                    <option key={hospital.id} value={hospital.id}>
+                      {hospital.name} ({hospital.region})
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>

@@ -31,9 +31,6 @@ class DoctorRepository {
       .from('doctors')
       .select('*, hospital:hospitals(*)');
 
-    if (filters.region) {
-      query = query.eq('region', filters.region);
-    }
     if (filters.specialty) {
       query = query.eq('specialty', filters.specialty);
     }
@@ -47,7 +44,14 @@ class DoctorRepository {
       throw new Error(`Failed to search doctors: ${error.message}`);
     }
 
-    return data as DoctorWithHospital[];
+    let results = data as DoctorWithHospital[];
+
+    // 클라이언트 측에서 지역 필터링
+    if (filters.region) {
+      results = results.filter(doctor => doctor.hospital?.region === filters.region);
+    }
+
+    return results;
   }
 
   async count(): Promise<number> {

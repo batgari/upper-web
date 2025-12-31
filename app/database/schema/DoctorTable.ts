@@ -9,7 +9,6 @@ export interface DoctorTable {
     photo_url: string | null
     bio: string | null
     experience_years: number | null
-    region: string
     available_hours: string | null
   }
   Insert: {
@@ -22,7 +21,6 @@ export interface DoctorTable {
     photo_url?: string | null
     bio?: string | null
     experience_years?: number | null
-    region: string
     available_hours?: string | null
   }
   Update: {
@@ -35,7 +33,6 @@ export interface DoctorTable {
     photo_url?: string | null
     bio?: string | null
     experience_years?: number | null
-    region?: string
     available_hours?: string | null
   }
 }

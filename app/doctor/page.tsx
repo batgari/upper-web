@@ -171,10 +171,12 @@ export default function DoctorsPage() {
                           <span>{doctor.experience_years}년</span>
                         </div>
                       )}
-                      <div className="flex items-center gap-1">
-                        <MapPin className="w-4 h-4" />
-                        <span>{doctor.region}</span>
-                      </div>
+                      {doctor.hospital?.region && (
+                        <div className="flex items-center gap-1">
+                          <MapPin className="w-4 h-4" />
+                          <span>{doctor.hospital.region}</span>
+                        </div>
+                      )}
                     </div>
 
                     {/* 소개 */}

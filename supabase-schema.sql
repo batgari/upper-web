@@ -20,13 +20,14 @@ CREATE TABLE IF NOT EXISTS doctors (
   photo_url TEXT,
   bio TEXT,
   experience_years INTEGER,
-  region TEXT NOT NULL,
   available_hours TEXT
 );
 
+-- 기존 테이블에서 region 컬럼 제거 (마이그레이션)
+ALTER TABLE doctors DROP COLUMN IF EXISTS region;
+
 -- 인덱스 생성 (검색 성능 향상)
 CREATE INDEX IF NOT EXISTS idx_doctors_specialty ON doctors(specialty);
-CREATE INDEX IF NOT EXISTS idx_doctors_region ON doctors(region);
 CREATE INDEX IF NOT EXISTS idx_doctors_hospital_id ON doctors(hospital_id);
 CREATE INDEX IF NOT EXISTS idx_hospitals_region ON hospitals(region);
 
@@ -65,6 +66,6 @@ CREATE POLICY "Enable delete for all users" ON doctors
 --   ('서울대학교병원', '서울특별시 종로구 대학로 101', '02-2072-2114', '서울'),
 --   ('삼성서울병원', '서울특별시 강남구 일원로 81', '02-3410-2114', '서울');
 
--- INSERT INTO doctors (name, specialty, sub_specialty, hospital_id, bio, experience_years, region) VALUES
---   ('김철수', '내과', '심장내과', (SELECT id FROM hospitals WHERE name = '서울대학교병원' LIMIT 1), '심장 질환 전문의', 15, '서울'),
---   ('이영희', '피부과', '미용피부과', (SELECT id FROM hospitals WHERE name = '삼성서울병원' LIMIT 1), '피부 미용 전문의', 10, '서울');
+-- INSERT INTO doctors (name, specialty, sub_specialty, hospital_id, bio, experience_years) VALUES
+--   ('김철수', '내과', '심장내과', (SELECT id FROM hospitals WHERE name = '서울대학교병원' LIMIT 1), '심장 질환 전문의', 15),
+--   ('이영희', '피부과', '미용피부과', (SELECT id FROM hospitals WHERE name = '삼성서울병원' LIMIT 1), '피부 미용 전문의', 10);
