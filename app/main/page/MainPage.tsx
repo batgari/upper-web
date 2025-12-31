@@ -14,7 +14,7 @@ export default function MainPage() {
             지역별, 진료과별 전문의 검색 서비스
           </p>
           <Link
-            href="/doctors"
+            href="/doctor"
             className="inline-flex items-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors"
           >
             <Search className="w-5 h-5" />

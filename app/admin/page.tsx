@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Users, Building2, ArrowRight } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/app/main/agent/SupabaseAgent';
 
 export default function AdminPage() {
   const [stats, setStats] = useState({
@@ -71,7 +71,7 @@ export default function AdminPage() {
         <h2 className="text-xl font-bold text-gray-900 mb-4">빠른 작업</h2>
         <div className="space-y-3">
           <Link
-            href="/admin/doctors"
+            href="/admin/doctor"
             className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <div className="flex items-center gap-3">
@@ -82,7 +82,7 @@ export default function AdminPage() {
           </Link>
 
           <Link
-            href="/admin/hospitals"
+            href="/admin/hospital"
             className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <div className="flex items-center gap-3">

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, X } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/app/main/agent/SupabaseAgent';
 import type { Hospital, HospitalInsert } from '@/types';
 
 export default function HospitalsPage() {

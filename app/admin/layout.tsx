@@ -21,12 +21,12 @@ export default function AdminLayout({
     },
     {
       name: '의사 관리',
-      href: '/admin/doctors',
+      href: '/admin/doctor',
       icon: Users,
     },
     {
       name: '병원 관리',
-      href: '/admin/hospitals',
+      href: '/admin/hospital',
       icon: Building2,
     },
   ];
