@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, X } from 'lucide-react';
-import { supabase } from '@/app/main/agent/SupabaseAgent';
-import type { Hospital, HospitalInsert } from '@/app/database';
+import type { Hospital, HospitalInsert } from '@/app/database/schema/HospitalTable';
+import HospitalRepository from './repository/HospitalRepository';
 
 export default function HospitalsPage() {
   const [showHospitalModal, setShowHospitalModal] = useState(false);
@@ -12,13 +12,11 @@ export default function HospitalsPage() {
 
   // 병원 목록 불러오기
   const fetchHospitals = async () => {
-    const { data, error } = await supabase
-      .from('hospitals')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (!error && data) {
-      setHospitals(data as Hospital[]);
+    try {
+      const data = await HospitalRepository.fetchAll();
+      setHospitals(data);
+    } catch (error) {
+      console.error('Failed to fetch hospitals:', error);
     }
   };
 
@@ -39,16 +37,13 @@ export default function HospitalsPage() {
       region: formData.get('region') as string,
     };
 
-    const { error } = await supabase
-      .from('hospitals')
-      .insert([hospitalData as any]);
-
-    if (!error) {
+    try {
+      await HospitalRepository.create(hospitalData);
       setShowHospitalModal(false);
       fetchHospitals();
       (e.target as HTMLFormElement).reset();
-    } else {
-      alert('병원 추가에 실패했습니다: ' + error.message);
+    } catch (error) {
+      alert('병원 추가에 실패했습니다: ' + (error as Error).message);
     }
 
     setLoading(false);

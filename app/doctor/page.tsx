@@ -2,12 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Search, MapPin, Stethoscope, Briefcase } from 'lucide-react';
-import { supabase } from '@/app/main/agent/SupabaseAgent';
-import type { Doctor, Hospital } from '@/app/database';
-
-interface DoctorWithHospital extends Doctor {
-  hospitals: Hospital | null;
-}
+import DoctorRepository, { type DoctorWithHospital } from '@/app/admin/doctor/repository/DoctorRepository';
 
 export default function DoctorsPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -24,29 +19,13 @@ export default function DoctorsPage() {
         setLoading(true);
         setError(null);
 
-        let query = supabase
-          .from('doctors')
-          .select(`
-            *,
-            hospitals (*)
-          `);
+        const data = await DoctorRepository.search({
+          region: selectedRegion || undefined,
+          specialty: selectedSpecialty || undefined,
+          query: searchQuery || undefined,
+        });
 
-        // 필터 적용
-        if (selectedRegion) {
-          query = query.eq('region', selectedRegion);
-        }
-        if (selectedSpecialty) {
-          query = query.eq('specialty', selectedSpecialty);
-        }
-        if (searchQuery) {
-          query = query.ilike('name', `%${searchQuery}%`);
-        }
-
-        const { data, error: fetchError } = await query;
-
-        if (fetchError) throw fetchError;
-
-        setDoctors(data || []);
+        setDoctors(data);
       } catch (err) {
         console.error('Error fetching doctors:', err);
         setError('데이터를 불러오는 중 오류가 발생했습니다.');
@@ -172,16 +151,16 @@ export default function DoctorsPage() {
                     )}
 
                     {/* 병원 정보 */}
-                    {doctor.hospitals && (
+                    {doctor.hospital && (
                       <div className="mb-3">
                         <p className="text-sm font-medium text-gray-900">
-                          {doctor.hospitals.name}
+                          {doctor.hospital.name}
                         </p>
                         <p className="text-xs text-gray-500 mt-1">
-                          {doctor.hospitals.address}
+                          {doctor.hospital.address}
                         </p>
                         <p className="text-xs text-gray-500">
-                          {doctor.hospitals.phone}
+                          {doctor.hospital.phone}
                         </p>
                       </div>
                     )}

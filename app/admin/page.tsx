@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Users, Building2, ArrowRight } from 'lucide-react';
-import { supabase } from '@/app/main/agent/SupabaseAgent';
+import DoctorRepository from './doctor/repository/DoctorRepository';
+import HospitalRepository from './hospital/repository/HospitalRepository';
 
 export default function AdminPage() {
   const [stats, setStats] = useState({
@@ -16,20 +17,19 @@ export default function AdminPage() {
   }, []);
 
   const fetchStats = async () => {
-    // 의사 수 조회
-    const { count: doctorsCount } = await supabase
-      .from('doctors')
-      .select('*', { count: 'exact', head: true });
+    try {
+      const [doctorsCount, hospitalsCount] = await Promise.all([
+        DoctorRepository.count(),
+        HospitalRepository.count(),
+      ]);
 
-    // 병원 수 조회
-    const { count: hospitalsCount } = await supabase
-      .from('hospitals')
-      .select('*', { count: 'exact', head: true });
-
-    setStats({
-      totalDoctors: doctorsCount || 0,
-      totalHospitals: hospitalsCount || 0,
-    });
+      setStats({
+        totalDoctors: doctorsCount,
+        totalHospitals: hospitalsCount,
+      });
+    } catch (error) {
+      console.error('Failed to fetch stats:', error);
+    }
   };
 
   return (

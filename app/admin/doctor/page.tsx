@@ -2,36 +2,34 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, X } from 'lucide-react';
-import { supabase } from '@/app/main/agent/SupabaseAgent';
-import type { Hospital, DoctorInsert } from '@/app/database';
+import type { Hospital } from '@/app/database/schema/HospitalTable';
+import type { DoctorInsert } from '@/app/database/schema/DoctorTable';
+import HospitalRepository from '@/app/admin/hospital/repository/HospitalRepository';
+import DoctorRepository, { type DoctorWithHospital } from './repository/DoctorRepository';
 
 export default function DoctorsPage() {
   const [showDoctorModal, setShowDoctorModal] = useState(false);
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
-  const [doctors, setDoctors] = useState<any[]>([]);
+  const [doctors, setDoctors] = useState<DoctorWithHospital[]>([]);
   const [loading, setLoading] = useState(false);
 
   // 병원 목록 불러오기
   const fetchHospitals = async () => {
-    const { data, error } = await supabase
-      .from('hospitals')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (!error && data) {
-      setHospitals(data as Hospital[]);
+    try {
+      const data = await HospitalRepository.fetchAll();
+      setHospitals(data);
+    } catch (error) {
+      console.error('Failed to fetch hospitals:', error);
     }
   };
 
   // 의사 목록 불러오기
   const fetchDoctors = async () => {
-    const { data, error } = await supabase
-      .from('doctors')
-      .select('*, hospital:hospitals(*)')
-      .order('created_at', { ascending: false });
-
-    if (!error && data) {
-      setDoctors(data as any[]);
+    try {
+      const data = await DoctorRepository.fetchAll();
+      setDoctors(data);
+    } catch (error) {
+      console.error('Failed to fetch doctors:', error);
     }
   };
 
@@ -58,16 +56,13 @@ export default function DoctorsPage() {
       photo_url: formData.get('photo_url') as string || null,
     };
 
-    const { error } = await supabase
-      .from('doctors')
-      .insert([doctorData as any]);
-
-    if (!error) {
+    try {
+      await DoctorRepository.create(doctorData);
       setShowDoctorModal(false);
       fetchDoctors();
       (e.target as HTMLFormElement).reset();
-    } else {
-      alert('의사 추가에 실패했습니다: ' + error.message);
+    } catch (error) {
+      alert('의사 추가에 실패했습니다: ' + (error as Error).message);
     }
 
     setLoading(false);
