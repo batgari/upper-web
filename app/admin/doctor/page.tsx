@@ -6,6 +6,7 @@ import type { Hospital } from '@/app/database/schema/HospitalTable';
 import type { DoctorInsert } from '@/app/database/schema/DoctorTable';
 import HospitalRepository from '@/app/admin/hospital/repository/HospitalRepository';
 import DoctorRepository, { type DoctorWithHospital } from './repository/DoctorRepository';
+import { Department } from '@/app/common/model/Department';
 
 export default function DoctorsPage() {
   const [showDoctorModal, setShowDoctorModal] = useState(false);
@@ -199,18 +200,11 @@ export default function DoctorsPage() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="">선택</option>
-                    <option value="내과">내과</option>
-                    <option value="외과">외과</option>
-                    <option value="정형외과">정형외과</option>
-                    <option value="성형외과">성형외과</option>
-                    <option value="피부과">피부과</option>
-                    <option value="안과">안과</option>
-                    <option value="이비인후과">이비인후과</option>
-                    <option value="산부인과">산부인과</option>
-                    <option value="소아청소년과">소아청소년과</option>
-                    <option value="정신건강의학과">정신건강의학과</option>
-                    <option value="치과">치과</option>
-                    <option value="한의원">한의원</option>
+                    {Object.values(Department).sort().map((dept) => (
+                      <option key={dept} value={dept}>
+                        {dept}
+                      </option>
+                    ))}
                   </select>
                 </div>
 

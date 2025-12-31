@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Search, MapPin, Stethoscope, Briefcase } from 'lucide-react';
 import DoctorRepository, { type DoctorWithHospital } from '@/app/admin/doctor/repository/DoctorRepository';
+import { Department } from '@/app/common/model/Department';
 
 export default function DoctorsPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -81,14 +82,11 @@ export default function DoctorsPage() {
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">모든 진료과</option>
-              <option value="내과">내과</option>
-              <option value="외과">외과</option>
-              <option value="정형외과">정형외과</option>
-              <option value="피부과">피부과</option>
-              <option value="안과">안과</option>
-              <option value="이비인후과">이비인후과</option>
-              <option value="산부인과">산부인과</option>
-              <option value="소아청소년과">소아청소년과</option>
+              {Object.values(Department).sort().map((dept) => (
+                <option key={dept} value={dept}>
+                  {dept}
+                </option>
+              ))}
             </select>
           </div>
         </div>
