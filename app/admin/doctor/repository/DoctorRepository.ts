@@ -1,5 +1,5 @@
 import { supabase } from '@/app/main/agent/SupabaseAgent';
-import type { Doctor, DoctorInsert } from '@/app/database/schema/DoctorTable';
+import type { Doctor, DoctorInsert, DoctorUpdate } from '@/app/database/schema/DoctorTable';
 import type { Hospital } from '@/app/database/schema/HospitalTable';
 
 export interface DoctorWithHospital extends Doctor {
@@ -73,6 +73,42 @@ class DoctorRepository {
 
     if (error) {
       throw new Error(`Failed to create doctor: ${error.message}`);
+    }
+  }
+
+  async getById(id: string): Promise<DoctorWithHospital> {
+    const { data, error } = await supabase
+      .from('doctors')
+      .select('*, hospital:hospitals(*)')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      throw new Error(`Failed to fetch doctor: ${error.message}`);
+    }
+
+    return data as DoctorWithHospital;
+  }
+
+  async update(id: string, updates: DoctorUpdate): Promise<void> {
+    const { error } = await supabase
+      .from('doctors')
+      .update(updates as any)
+      .eq('id', id);
+
+    if (error) {
+      throw new Error(`Failed to update doctor: ${error.message}`);
+    }
+  }
+
+  async delete(id: string): Promise<void> {
+    const { error } = await supabase
+      .from('doctors')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      throw new Error(`Failed to delete doctor: ${error.message}`);
     }
   }
 }
