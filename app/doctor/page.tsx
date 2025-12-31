@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Search, MapPin, Stethoscope, Briefcase } from 'lucide-react';
 import { supabase } from '@/app/main/agent/SupabaseAgent';
-import type { Doctor, Hospital } from '@/types';
+import type { Doctor, Hospital } from '@/app/database';
 
 interface DoctorWithHospital extends Doctor {
   hospitals: Hospital | null;

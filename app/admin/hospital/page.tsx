@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, X } from 'lucide-react';
 import { supabase } from '@/app/main/agent/SupabaseAgent';
-import type { Hospital, HospitalInsert } from '@/types';
+import type { Hospital, HospitalInsert } from '@/app/database';
 
 export default function HospitalsPage() {
   const [showHospitalModal, setShowHospitalModal] = useState(false);
