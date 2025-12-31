@@ -3,10 +3,10 @@ import { Doctor, DoctorTable } from '../../../database/schema/DoctorTable';
 
 
 export interface DoctorWithHospital extends Doctor {
-  hospital: Hospital;
+  hospital: Hospital | null;
 }
 
-export interface SearchFilters {
+export interface DoctorSearchFilters {
   region?: string;
   specialty?: string;
   subSpecialty?: string;

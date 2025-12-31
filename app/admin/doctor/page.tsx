@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import { Plus, X, Edit2, Trash2, AlertCircle } from 'lucide-react';
 import type { Hospital } from '@/app/database/schema/HospitalTable';
 import type { DoctorInsert } from '@/app/database/schema/DoctorTable';
+import type { DoctorWithHospital } from './model/DoctorTypes';
 import HospitalRepository from '@/app/admin/hospital/repository/HospitalRepository';
-import DoctorRepository, { type DoctorWithHospital } from './repository/DoctorRepository';
+import DoctorRepository from './repository/DoctorRepository';
 import { Department } from '@/app/common/model/Department';
 
 export default function DoctorsPage() {

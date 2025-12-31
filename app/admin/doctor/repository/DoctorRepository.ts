@@ -1,16 +1,6 @@
 import { supabase } from '@/app/main/agent/SupabaseAgent';
-import type { Doctor, DoctorInsert, DoctorUpdate } from '@/app/database/schema/DoctorTable';
-import type { Hospital } from '@/app/database/schema/HospitalTable';
-
-export interface DoctorWithHospital extends Doctor {
-  hospital: Hospital | null;
-}
-
-export interface DoctorSearchFilters {
-  region?: string;
-  specialty?: string;
-  query?: string;
-}
+import type { DoctorInsert, DoctorUpdate } from '@/app/database/schema/DoctorTable';
+import type { DoctorWithHospital, DoctorSearchFilters } from '../model/DoctorTypes';
 
 class DoctorRepository {
   async fetchAll(): Promise<DoctorWithHospital[]> {
