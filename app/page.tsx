@@ -53,19 +53,16 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section - 당근마켓 스타일 */}
+    <div className="min-h-screen bg-gradient-to-b from-rose-50 via-white to-white">
+      {/* Hero Section */}
       <div className="relative overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-orange-50 via-white to-white" />
-
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="pt-16 sm:pt-24 pb-12 text-center">
+          <div className="pt-8 sm:pt-16 pb-12 text-center">
             {/* Main Title */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 tracking-tight">
               믿을 수 있는 의사를
               <br />
-              <span className="text-orange-500">찾아보세요</span>
+              <span className="text-rose-500">찾아보세요</span>
             </h1>
 
             <p className="text-base sm:text-lg text-gray-500 mb-10 max-w-lg mx-auto">
@@ -73,7 +70,7 @@ export default function Home() {
               나에게 맞는 의사를 찾아보세요
             </p>
 
-            {/* Search Bar - 당근마켓 스타일 */}
+            {/* Search Bar */}
             <form onSubmit={handleSearch} className="max-w-xl mx-auto">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -82,11 +79,11 @@ export default function Home() {
                   placeholder="의사, 병원, 시술명 검색"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-24 py-4 text-base bg-gray-100 border-0 rounded-full focus:bg-white focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all placeholder-gray-400"
+                  className="w-full pl-12 pr-24 py-4 text-base bg-white/80 border border-gray-200 rounded-full focus:bg-white focus:ring-2 focus:ring-rose-500 focus:border-transparent focus:outline-none transition-all placeholder-gray-400 shadow-sm"
                 />
                 <button
                   type="submit"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 px-5 py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-full text-sm font-semibold transition-colors"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 px-5 py-2.5 bg-rose-500 hover:bg-rose-600 text-white rounded-full text-sm font-semibold transition-colors"
                 >
                   검색
                 </button>
@@ -99,7 +96,7 @@ export default function Home() {
       {/* Procedure Categories Section */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex items-center gap-2 mb-6">
-          <Sparkles className="w-5 h-5 text-orange-500" />
+          <Sparkles className="w-5 h-5 text-rose-500" />
           <h2 className="text-lg font-bold text-gray-900">시술 분야</h2>
         </div>
 
@@ -110,7 +107,7 @@ export default function Home() {
               <button
                 key={category.name}
                 onClick={() => handleCategoryClick(category.name)}
-                className="group flex flex-col items-center p-4 sm:p-5 bg-white border border-gray-100 rounded-2xl hover:border-orange-200 hover:shadow-lg transition-all duration-200"
+                className="group flex flex-col items-center p-4 sm:p-5 bg-white border border-gray-100 rounded-2xl hover:border-rose-200 hover:shadow-lg transition-all duration-200"
               >
                 <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br ${category.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
                   <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
@@ -127,7 +124,7 @@ export default function Home() {
       {/* Beauty Regions Section */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 pb-16">
         <div className="flex items-center gap-2 mb-6">
-          <MapPin className="w-5 h-5 text-orange-500" />
+          <MapPin className="w-5 h-5 text-rose-500" />
           <h2 className="text-lg font-bold text-gray-900">주요 지역</h2>
         </div>
 
@@ -138,7 +135,7 @@ export default function Home() {
               onClick={() => handleRegionClick(region.name)}
               className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
                 region.highlight
-                  ? 'bg-orange-500 text-white hover:bg-orange-600 shadow-sm'
+                  ? 'bg-rose-500 text-white hover:bg-rose-600 shadow-sm'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -149,25 +146,23 @@ export default function Home() {
       </div>
 
       {/* Bottom CTA */}
-      <div className="border-t border-gray-100">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl p-6 sm:p-8">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-                <Users className="w-6 h-6 text-orange-600" />
-              </div>
-              <div className="text-center sm:text-left">
-                <p className="text-gray-900 font-semibold">전체 의사 목록 보기</p>
-                <p className="text-gray-500 text-sm">모든 전문의 정보를 확인해보세요</p>
-              </div>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-gradient-to-r from-rose-50 to-pink-50 rounded-2xl p-6 sm:p-8">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center">
+              <Users className="w-6 h-6 text-rose-600" />
             </div>
-            <button
-              onClick={() => router.push('/doctor')}
-              className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-full text-sm font-semibold transition-colors"
-            >
-              전체 보기
-            </button>
+            <div className="text-center sm:text-left">
+              <p className="text-gray-900 font-semibold">전체 의사 목록 보기</p>
+              <p className="text-gray-500 text-sm">모든 전문의 정보를 확인해보세요</p>
+            </div>
           </div>
+          <button
+            onClick={() => router.push('/doctor')}
+            className="px-6 py-3 bg-rose-500 hover:bg-rose-600 text-white rounded-full text-sm font-semibold transition-colors"
+          >
+            전체 보기
+          </button>
         </div>
       </div>
     </div>

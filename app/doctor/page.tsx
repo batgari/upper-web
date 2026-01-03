@@ -101,7 +101,7 @@ export default function DoctorsPage() {
                   placeholder="의사, 병원, 시술명 검색"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 text-base bg-gray-100 border-0 rounded-full focus:bg-white focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all placeholder-gray-400"
+                  className="w-full pl-12 pr-4 py-3 text-base bg-gray-100 border-0 rounded-full focus:bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none transition-all placeholder-gray-400"
                 />
               </div>
             </form>
@@ -116,7 +116,7 @@ export default function DoctorsPage() {
                   <button
                     key={region}
                     onClick={() => toggleRegion(region)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-100 text-orange-700 rounded-full text-sm font-medium hover:bg-orange-200 transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-100 text-rose-700 rounded-full text-sm font-medium hover:bg-rose-200 transition-colors"
                   >
                     <MapPin className="w-3 h-3" />
                     {region}
@@ -127,7 +127,7 @@ export default function DoctorsPage() {
                   <button
                     key={specialty}
                     onClick={() => toggleSpecialty(specialty)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-100 text-orange-700 rounded-full text-sm font-medium hover:bg-orange-200 transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-100 text-rose-700 rounded-full text-sm font-medium hover:bg-rose-200 transition-colors"
                   >
                     <Stethoscope className="w-3 h-3" />
                     {specialty}
@@ -154,7 +154,7 @@ export default function DoctorsPage() {
               {/* Region Filter */}
               <div className="p-4 border-b border-gray-100">
                 <div className="flex items-center gap-2 mb-3">
-                  <MapPin className="w-4 h-4 text-orange-500" />
+                  <MapPin className="w-4 h-4 text-rose-500" />
                   <h3 className="text-sm font-bold text-gray-900">지역</h3>
                 </div>
                 <div className="space-y-0.5 max-h-48 overflow-y-auto">
@@ -164,7 +164,7 @@ export default function DoctorsPage() {
                       onClick={() => toggleRegion(region)}
                       className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
                         selectedRegions.includes(region)
-                          ? 'bg-orange-500 text-white font-medium'
+                          ? 'bg-rose-500 text-white font-medium'
                           : 'text-gray-600 hover:bg-gray-50'
                       }`}
                     >
@@ -177,7 +177,7 @@ export default function DoctorsPage() {
               {/* Specialty Filter */}
               <div className="p-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <Stethoscope className="w-4 h-4 text-orange-500" />
+                  <Stethoscope className="w-4 h-4 text-rose-500" />
                   <h3 className="text-sm font-bold text-gray-900">진료과</h3>
                 </div>
                 <div className="space-y-0.5 max-h-72 overflow-y-auto">
@@ -187,7 +187,7 @@ export default function DoctorsPage() {
                       onClick={() => toggleSpecialty(specialty)}
                       className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
                         selectedSpecialties.includes(specialty)
-                          ? 'bg-orange-500 text-white font-medium'
+                          ? 'bg-rose-500 text-white font-medium'
                           : 'text-gray-600 hover:bg-gray-50'
                       }`}
                     >
@@ -210,7 +210,7 @@ export default function DoctorsPage() {
 
             {loading ? (
               <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-2 border-orange-500 border-t-transparent"></div>
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-2 border-rose-500 border-t-transparent"></div>
                 <p className="mt-4 text-gray-500 text-sm">로딩 중...</p>
               </div>
             ) : error ? (
@@ -228,12 +228,12 @@ export default function DoctorsPage() {
                   <div
                     key={doctor.id}
                     onClick={() => router.push(`/doctor/${doctor.id}`)}
-                    className="group bg-white rounded-xl border border-gray-200 p-4 hover:border-orange-300 hover:shadow-md transition-all duration-200 cursor-pointer"
+                    className="group bg-white rounded-xl border border-gray-200 p-4 hover:border-rose-300 hover:shadow-md transition-all duration-200 cursor-pointer"
                   >
                     {/* 수평으로 긴 박스 형태 */}
                     <div className="flex items-center gap-4">
                       {/* 프로필 이미지 */}
-                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-orange-100 to-amber-100 rounded-xl flex items-center justify-center text-orange-600 font-bold text-xl flex-shrink-0 overflow-hidden">
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-rose-100 to-pink-100 rounded-xl flex items-center justify-center text-rose-600 font-bold text-xl flex-shrink-0 overflow-hidden">
                         {doctor.photo_url ? (
                           <img
                             src={doctor.photo_url}
@@ -251,7 +251,7 @@ export default function DoctorsPage() {
                           <h3 className="font-bold text-base sm:text-lg text-gray-900">
                             {doctor.name}
                           </h3>
-                          <span className="px-2 py-0.5 bg-orange-100 text-orange-700 rounded text-xs font-medium">
+                          <span className="px-2 py-0.5 bg-rose-100 text-rose-700 rounded text-xs font-medium">
                             {doctor.specialty}
                           </span>
                         </div>
@@ -286,7 +286,7 @@ export default function DoctorsPage() {
                       </div>
 
                       {/* 화살표 */}
-                      <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-orange-500 transition-colors flex-shrink-0" />
+                      <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-rose-500 transition-colors flex-shrink-0" />
                     </div>
                   </div>
                 ))}
