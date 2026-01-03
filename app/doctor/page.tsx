@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { Search, MapPin, Stethoscope, Briefcase } from 'lucide-react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { Search, MapPin, Stethoscope, Briefcase, X, Building2, ChevronRight, Home } from 'lucide-react';
 import DoctorRepository, { type DoctorWithHospital } from '@/app/admin/doctor/repository/DoctorRepository';
 import { Department } from '@/app/common/model/Department';
 
 export default function DoctorsPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState(searchParams.get('query') || '');
   const [selectedRegions, setSelectedRegions] = useState<string[]>(
@@ -20,14 +21,15 @@ export default function DoctorsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // 미용 분야 주요 지역
   const regions = [
-    '서울', '경기', '인천', '부산', '대구', '광주', '대전', '울산',
-    '세종', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주'
+    '강남', '압구정', '청담', '신사', '논현', '신논현',
+    '홍대', '이태원', '명동', '잠실', '송파',
+    '부산 서면', '대구 동성로', '인천', '대전', '광주'
   ];
 
   const specialties = Object.values(Department).sort();
 
-  // 데이터 가져오기
   useEffect(() => {
     async function fetchDoctors() {
       try {
@@ -74,78 +76,123 @@ export default function DoctorsPage() {
     setSearchQuery('');
   };
 
+  const activeFilterCount = selectedRegions.length + selectedSpecialties.length;
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Search Bar */}
-        <form onSubmit={handleSearchSubmit} className="mb-6">
-          <div className="relative max-w-2xl">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="지역, 병원, 의사 이름으로 검색"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 text-base border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none transition-colors bg-white"
-            />
-          </div>
-        </form>
+      {/* Header - 당근마켓 스타일 */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center gap-4">
+            {/* Home Button */}
+            <button
+              onClick={() => router.push('/')}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <Home className="w-5 h-5 text-gray-600" />
+            </button>
 
-        {/* Layout: Left Filter Panel + Right Results */}
-        <div className="flex gap-6">
-          {/* Left Filter Panel */}
-          <aside className="w-64 flex-shrink-0">
-            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-gray-900">필터</h2>
-                {(selectedRegions.length > 0 || selectedSpecialties.length > 0) && (
-                  <button
-                    onClick={clearFilters}
-                    className="text-sm text-blue-600 hover:text-blue-700"
-                  >
-                    초기화
-                  </button>
-                )}
+            {/* Search Bar - 메인과 동일한 스타일 */}
+            <form onSubmit={handleSearchSubmit} className="flex-1 max-w-2xl">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="의사, 병원, 시술명 검색"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 text-base bg-gray-100 border-0 rounded-full focus:bg-white focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all placeholder-gray-400"
+                />
               </div>
+            </form>
+          </div>
 
+          {/* Active Filters */}
+          {activeFilterCount > 0 && (
+            <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
+              <span className="text-sm text-gray-500">필터:</span>
+              <div className="flex flex-wrap gap-2">
+                {selectedRegions.map(region => (
+                  <button
+                    key={region}
+                    onClick={() => toggleRegion(region)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-100 text-orange-700 rounded-full text-sm font-medium hover:bg-orange-200 transition-colors"
+                  >
+                    <MapPin className="w-3 h-3" />
+                    {region}
+                    <X className="w-3 h-3" />
+                  </button>
+                ))}
+                {selectedSpecialties.map(specialty => (
+                  <button
+                    key={specialty}
+                    onClick={() => toggleSpecialty(specialty)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-100 text-orange-700 rounded-full text-sm font-medium hover:bg-orange-200 transition-colors"
+                  >
+                    <Stethoscope className="w-3 h-3" />
+                    {specialty}
+                    <X className="w-3 h-3" />
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={clearFilters}
+                className="text-sm text-gray-500 hover:text-gray-700 font-medium ml-2"
+              >
+                전체 해제
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex gap-6">
+          {/* Left Filter Panel - 나열식 */}
+          <aside className="w-56 flex-shrink-0 hidden lg:block">
+            <div className="bg-white rounded-xl border border-gray-200 sticky top-28 overflow-hidden">
               {/* Region Filter */}
-              <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-700 mb-3">지역</h3>
-                <div className="space-y-2 max-h-64 overflow-y-auto">
+              <div className="p-4 border-b border-gray-100">
+                <div className="flex items-center gap-2 mb-3">
+                  <MapPin className="w-4 h-4 text-orange-500" />
+                  <h3 className="text-sm font-bold text-gray-900">지역</h3>
+                </div>
+                <div className="space-y-0.5 max-h-48 overflow-y-auto">
                   {regions.map((region) => (
-                    <label
+                    <button
                       key={region}
-                      className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-2 rounded"
+                      onClick={() => toggleRegion(region)}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
+                        selectedRegions.includes(region)
+                          ? 'bg-orange-500 text-white font-medium'
+                          : 'text-gray-600 hover:bg-gray-50'
+                      }`}
                     >
-                      <input
-                        type="checkbox"
-                        checked={selectedRegions.includes(region)}
-                        onChange={() => toggleRegion(region)}
-                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                      />
-                      <span className="text-sm text-gray-700">{region}</span>
-                    </label>
+                      {region}
+                    </button>
                   ))}
                 </div>
               </div>
 
               {/* Specialty Filter */}
-              <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-3">진료과</h3>
-                <div className="space-y-2 max-h-96 overflow-y-auto">
+              <div className="p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Stethoscope className="w-4 h-4 text-orange-500" />
+                  <h3 className="text-sm font-bold text-gray-900">진료과</h3>
+                </div>
+                <div className="space-y-0.5 max-h-72 overflow-y-auto">
                   {specialties.map((specialty) => (
-                    <label
+                    <button
                       key={specialty}
-                      className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-2 rounded"
+                      onClick={() => toggleSpecialty(specialty)}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
+                        selectedSpecialties.includes(specialty)
+                          ? 'bg-orange-500 text-white font-medium'
+                          : 'text-gray-600 hover:bg-gray-50'
+                      }`}
                     >
-                      <input
-                        type="checkbox"
-                        checked={selectedSpecialties.includes(specialty)}
-                        onChange={() => toggleSpecialty(specialty)}
-                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                      />
-                      <span className="text-sm text-gray-700">{specialty}</span>
-                    </label>
+                      {specialty}
+                    </button>
                   ))}
                 </div>
               </div>
@@ -153,106 +200,98 @@ export default function DoctorsPage() {
           </aside>
 
           {/* Right Results Area */}
-          <main className="flex-1">
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              {loading ? (
-                <div className="text-center py-12">
-                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                  <p className="mt-4 text-gray-600">데이터를 불러오는 중...</p>
-                </div>
-              ) : error ? (
-                <div className="text-center py-12">
-                  <p className="text-red-600">{error}</p>
-                </div>
-              ) : doctors.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-gray-500">검색 결과가 없습니다.</p>
-                </div>
-              ) : (
-                <div>
-                  <p className="text-sm text-gray-600 mb-6">
-                    총 <span className="font-semibold text-blue-600">{doctors.length}</span>명의 의사를 찾았습니다.
-                  </p>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {doctors.map((doctor) => (
-                      <div
-                        key={doctor.id}
-                        className="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow cursor-pointer"
-                      >
-                        {/* 의사 사진 */}
-                        <div className="flex items-start gap-4 mb-4">
-                          <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-semibold text-xl flex-shrink-0">
-                            {doctor.photo_url ? (
-                              <img
-                                src={doctor.photo_url}
-                                alt={doctor.name}
-                                className="w-full h-full rounded-full object-cover"
-                              />
-                            ) : (
-                              doctor.name.charAt(0)
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold text-lg text-gray-900 truncate">
-                              {doctor.name}
-                            </h3>
-                            <div className="flex items-center gap-1 text-sm text-gray-600 mt-1">
-                              <Stethoscope className="w-4 h-4" />
-                              <span>{doctor.specialty}</span>
-                            </div>
-                          </div>
+          <main className="flex-1 min-w-0">
+            {/* Results Count */}
+            <div className="mb-4">
+              <p className="text-sm text-gray-500">
+                총 <span className="font-bold text-gray-900">{doctors.length}</span>명의 의사
+              </p>
+            </div>
+
+            {loading ? (
+              <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-2 border-orange-500 border-t-transparent"></div>
+                <p className="mt-4 text-gray-500 text-sm">로딩 중...</p>
+              </div>
+            ) : error ? (
+              <div className="bg-white rounded-xl border border-red-200 p-12 text-center">
+                <p className="text-red-600 text-sm">{error}</p>
+              </div>
+            ) : doctors.length === 0 ? (
+              <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+                <p className="text-gray-500 text-base font-medium">검색 결과가 없습니다</p>
+                <p className="text-gray-400 text-sm mt-1">다른 조건으로 검색해보세요</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {doctors.map((doctor) => (
+                  <div
+                    key={doctor.id}
+                    onClick={() => router.push(`/doctor/${doctor.id}`)}
+                    className="group bg-white rounded-xl border border-gray-200 p-4 hover:border-orange-300 hover:shadow-md transition-all duration-200 cursor-pointer"
+                  >
+                    {/* 수평으로 긴 박스 형태 */}
+                    <div className="flex items-center gap-4">
+                      {/* 프로필 이미지 */}
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-orange-100 to-amber-100 rounded-xl flex items-center justify-center text-orange-600 font-bold text-xl flex-shrink-0 overflow-hidden">
+                        {doctor.photo_url ? (
+                          <img
+                            src={doctor.photo_url}
+                            alt={doctor.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          doctor.name.charAt(0)
+                        )}
+                      </div>
+
+                      {/* 의사 정보 */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-bold text-base sm:text-lg text-gray-900">
+                            {doctor.name}
+                          </h3>
+                          <span className="px-2 py-0.5 bg-orange-100 text-orange-700 rounded text-xs font-medium">
+                            {doctor.specialty}
+                          </span>
                         </div>
 
-                        {/* 세부 전공 */}
-                        {doctor.sub_specialty && (
-                          <p className="text-sm text-gray-600 mb-3">
-                            <span className="font-medium">세부 전공:</span> {doctor.sub_specialty}
-                          </p>
-                        )}
-
-                        {/* 병원 정보 */}
                         {doctor.hospital && (
-                          <div className="mb-3">
-                            <p className="text-sm font-medium text-gray-900">
-                              {doctor.hospital.name}
-                            </p>
-                            <p className="text-xs text-gray-500 mt-1">
-                              {doctor.hospital.address}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {doctor.hospital.phone}
-                            </p>
+                          <div className="flex items-center gap-1.5 text-sm text-gray-600 mb-1">
+                            <Building2 className="w-3.5 h-3.5 text-gray-400" />
+                            <span className="truncate">{doctor.hospital.name}</span>
                           </div>
                         )}
 
-                        {/* 경력 및 지역 */}
-                        <div className="flex items-center gap-4 text-sm text-gray-600 mt-3 pt-3 border-t">
+                        <div className="flex items-center gap-3 text-xs text-gray-500">
                           {doctor.experience_years && (
-                            <div className="flex items-center gap-1">
-                              <Briefcase className="w-4 h-4" />
-                              <span>{doctor.experience_years}년</span>
-                            </div>
+                            <span className="flex items-center gap-1">
+                              <Briefcase className="w-3 h-3" />
+                              경력 {doctor.experience_years}년
+                            </span>
                           )}
-                          {doctor.hospital?.region && (
-                            <div className="flex items-center gap-1">
-                              <MapPin className="w-4 h-4" />
-                              <span>{doctor.hospital.region}</span>
-                            </div>
+                          {doctor.hospital?.address && (
+                            <span className="flex items-center gap-1 truncate">
+                              <MapPin className="w-3 h-3" />
+                              {doctor.hospital.address.split(' ').slice(0, 2).join(' ')}
+                            </span>
                           )}
                         </div>
 
-                        {/* 소개 */}
                         {doctor.bio && (
-                          <p className="text-sm text-gray-600 mt-3 line-clamp-2">
+                          <p className="text-xs text-gray-500 mt-2 line-clamp-1 hidden sm:block">
                             {doctor.bio}
                           </p>
                         )}
                       </div>
-                    ))}
+
+                      {/* 화살표 */}
+                      <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-orange-500 transition-colors flex-shrink-0" />
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
+                ))}
+              </div>
+            )}
           </main>
         </div>
       </div>
