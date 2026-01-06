@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Users, Building2, LayoutDashboard, Menu, X } from 'lucide-react';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 export default function AdminLayout({
   children,
@@ -11,7 +12,28 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isAdmin, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && !isAdmin) {
+      alert('관리자만 접근할 수 있습니다.');
+      router.push('/');
+    }
+  }, [isAdmin, loading, router]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-gray-500">로딩 중...</div>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return null;
+  }
 
   const menuItems = [
     {
