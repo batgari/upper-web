@@ -59,14 +59,12 @@ export default function Home() {
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="pt-8 sm:pt-16 pb-12 text-center">
             {/* Main Title */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 tracking-tight">
-              믿을 수 있는 의사를
-              <br />
-              <span className="text-rose-500">찾아보세요</span>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
+              Looking for a Korean aesthetic doctor at Upper?
             </h1>
 
             <p className="text-base sm:text-lg text-gray-500 mb-10 max-w-lg mx-auto">
-              검증된 전문의 정보를 확인하고<br className="sm:hidden" />
+              검증된 전문의 정보를 확인하고 <br className="sm:hidden" />
               나에게 맞는 의사를 찾아보세요
             </p>
 
