@@ -31,7 +31,17 @@ export class AuthRepository {
       .eq('id', userId)
       .single();
 
-    return data !== null && !error;
+    // PGRST116: 레코드가 없는 경우 (정상적인 경우 - 미가입 사용자)
+    if (error?.code === 'PGRST116') {
+      return false;
+    }
+
+    // 다른 에러인 경우
+    if (error) {
+      throw error;
+    }
+
+    return data !== null;
   }
 
   /**
