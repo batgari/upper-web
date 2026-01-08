@@ -6,6 +6,9 @@ import { Search, MapPin, Stethoscope, Briefcase, X, Building2, ChevronRight, Hom
 import DoctorRepository, { type DoctorWithHospital } from '@/app/admin/doctor/repository/DoctorRepository';
 import { Department } from '@/app/common/model/Department';
 
+// useSearchParams() 사용으로 인한 정적 생성 에러 방지 - 페이지를 동적으로 렌더링
+export const dynamic = 'force-dynamic';
+
 export default function DoctorsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
