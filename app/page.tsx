@@ -1,12 +1,40 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, useRef } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Search, Sparkles, MapPin, Eye, Scissors, Syringe, Heart, Star, Smile, Hand, Users } from 'lucide-react';
 
 export default function Home() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
+  const messageShown = useRef(false);
+
+  // 인증 메시지 처리
+  useEffect(() => {
+    const message = searchParams.get('message');
+    if (message && !messageShown.current) {
+      messageShown.current = true;
+
+      switch (message) {
+        case 'welcome':
+          alert('환영합니다! Upper에 가입되었습니다.');
+          break;
+        case 'already_registered':
+          //alert('이미 가입된 계정입니다. 로그인을 이용해주세요.');
+          break;
+        case 'signup_required':
+          alert('회원가입이 필요합니다. 먼저 회원가입을 진행해주세요.');
+          break;
+        case 'signup_failed':
+          alert('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
+          break;
+      }
+
+      // URL에서 message 파라미터 제거
+      router.replace('/');
+    }
+  }, [searchParams, router]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

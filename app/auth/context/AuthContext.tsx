@@ -1,9 +1,11 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/app/main/agent/SupabaseAgent';
 import { Database } from '@/app/database/schema/Database';
+import { AuthRepository } from '@/app/auth/repository/AuthRepository';
 
 type UserRole = Database['public']['Tables']['users']['Row']['role'];
 
@@ -12,13 +14,14 @@ interface AuthContextType {
   userRole: UserRole | null;
   isAdmin: boolean;
   loading: boolean;
-  signInWithGoogle: () => Promise<void>;
+  signInWithGoogle: (mode?: 'signup' | 'login') => Promise<void>;
   signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [userRole, setUserRole] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(true);
@@ -50,25 +53,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchUserRole = async (userId: string) => {
+  const fetchUserRole = async (userId: string, retryCount = 0) => {
     try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('role')
-        .eq('id', userId)
-        .single();
-
-      if (error) throw error;
-      setUserRole(data.role);
-    } catch (error) {
-      console.error('Error fetching user role:', error);
-      setUserRole('user');
-    } finally {
+      const role = await AuthRepository.getUserRole(userId);
+      setUserRole(role);
       setLoading(false);
+    } catch (error: any) {
+      // PGRST116: 레코드가 없는 경우 (미가입 사용자)
+      if (error.code === 'PGRST116') {
+        // 첫 시도에서 레코드가 없으면 재시도 (회원가입 직후 타이밍 이슈)
+        if (retryCount < 2) {
+          await new Promise(resolve => setTimeout(resolve, 800)); // 800ms 대기
+          return await fetchUserRole(userId, retryCount + 1);
+        }
+
+        // 회원가입되지 않은 사용자는 세션 삭제
+        await supabase.auth.signOut();
+        setUser(null);
+        setUserRole(null);
+        setLoading(false);
+        // 사용자에게 메시지 표시
+        router.push('/?message=signup_required');
+        return;
+      } else {
+        // 실제 에러인 경우
+        setUserRole('user');
+        setLoading(false);
+      }
     }
   };
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = async (mode: 'signup' | 'login' = 'login') => {
+    // mode를 sessionStorage에 저장 (OAuth 리다이렉트 후에도 유지)
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('auth_mode', mode);
+    }
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -76,7 +96,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       },
     });
     if (error) {
-      console.error('Error signing in with Google:', error);
       throw error;
     }
   };
@@ -84,7 +103,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      console.error('Error signing out:', error);
       throw error;
     }
   };

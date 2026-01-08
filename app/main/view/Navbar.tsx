@@ -1,18 +1,19 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
-import { Search, UserCircle, LogOut, LogIn } from 'lucide-react';
-import { useAuth } from '@/app/contexts/AuthContext';
+import { Search, UserCircle, LogOut, LogIn, UserPlus } from 'lucide-react';
+import { useAuth } from '@/app/auth/context/AuthContext';
+import AuthModal from '@/app/auth/view/AuthModal';
 
 export default function Navbar() {
-  const { user, isAdmin, loading, signInWithGoogle, signOut } = useAuth();
+  const { user, isAdmin, loading, signOut } = useAuth();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'signup' | 'login'>('login');
 
-  const handleSignIn = async () => {
-    try {
-      await signInWithGoogle();
-    } catch (error) {
-      console.error('Failed to sign in:', error);
-    }
+  const handleOpenAuthModal = (mode: 'signup' | 'login') => {
+    setAuthMode(mode);
+    setAuthModalOpen(true);
   };
 
   const handleSignOut = async () => {
@@ -63,19 +64,34 @@ export default function Navbar() {
                     <span>로그아웃</span>
                   </button>
                 ) : (
-                  <button
-                    onClick={handleSignIn}
-                    className="flex items-center gap-2 text-gray-600 hover:text-rose-500 transition-colors text-sm font-medium"
-                  >
-                    <LogIn className="w-4 h-4" />
-                    <span>로그인</span>
-                  </button>
+                  <>
+                    <button
+                      onClick={() => handleOpenAuthModal('signup')}
+                      className="flex items-center gap-2 text-gray-600 hover:text-rose-500 transition-colors text-sm font-medium"
+                    >
+                      <UserPlus className="w-4 h-4" />
+                      <span>회원가입</span>
+                    </button>
+                    <button
+                      onClick={() => handleOpenAuthModal('login')}
+                      className="flex items-center gap-2 text-gray-600 hover:text-rose-500 transition-colors text-sm font-medium"
+                    >
+                      <LogIn className="w-4 h-4" />
+                      <span>로그인</span>
+                    </button>
+                  </>
                 )}
               </>
             )}
           </div>
         </div>
       </div>
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        mode={authMode}
+        onModeChange={setAuthMode}
+      />
     </nav>
   );
 }
