@@ -68,7 +68,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         // 회원가입되지 않은 사용자는 세션 삭제
-        await supabase.auth.signOut();
+        try {
+          await supabase.auth.signOut({ scope: 'local' });
+        } catch (err) {
+          // 403 에러 등은 무시하고 계속 진행
+        }
         setUser(null);
         setUserRole(null);
         setLoading(false);
@@ -106,13 +110,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     // 세션이 없으면 이미 로그아웃된 상태이므로 에러를 던지지 않음
     if (!session) {
+      // 로컬 상태 정리
+      setUser(null);
+      setUserRole(null);
       return;
     }
     
-    const { error } = await supabase.auth.signOut();
+    // scope: 'local'을 사용하여 현재 클라이언트의 세션만 로그아웃
+    // global scope는 권한 문제로 403 에러가 발생할 수 있음
+    const { error } = await supabase.auth.signOut({ scope: 'local' });
+    
+    // 로컬 상태는 항상 정리
+    setUser(null);
+    setUserRole(null);
+    
     if (error) {
-      // AuthSessionMissingError는 무시 (이미 세션 확인했지만, 타이밍 이슈로 발생할 수 있음)
-      if (error.message?.includes('Auth session missing') || error.name === 'AuthSessionMissingError') {
+      // 403 Forbidden이나 AuthSessionMissingError는 무시
+      // (이미 로컬 상태는 정리했으므로)
+      if (
+        error.status === 403 ||
+        error.message?.includes('Auth session missing') ||
+        error.message?.includes('Forbidden') ||
+        error.name === 'AuthSessionMissingError'
+      ) {
         return;
       }
       throw error;

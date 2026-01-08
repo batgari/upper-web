@@ -37,7 +37,11 @@ export default function AuthCallback() {
         if (mode === 'signup') {
           if (userExists) {
             // 이미 가입된 사용자
-            await supabase.auth.signOut();
+            try {
+              await supabase.auth.signOut({ scope: 'local' });
+            } catch (err) {
+              // 403 에러 등은 무시하고 계속 진행
+            }
             sessionStorage.removeItem('auth_mode');
             // NavBar 상태 업데이트를 위해 약간의 지연 후 페이지 이동
             await new Promise(resolve => setTimeout(resolve, 100));
@@ -58,7 +62,11 @@ export default function AuthCallback() {
           // login 모드
           if (!userExists) {
             // 미가입 사용자
-            await supabase.auth.signOut();
+            try {
+              await supabase.auth.signOut({ scope: 'local' });
+            } catch (err) {
+              // 403 에러 등은 무시하고 계속 진행
+            }
             sessionStorage.removeItem('auth_mode');
             // 상태 업데이트를 위해 약간의 지연 후 페이지 이동
             await new Promise(resolve => setTimeout(resolve, 100));
