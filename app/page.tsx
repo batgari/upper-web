@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Search, Sparkles, MapPin, Eye, Scissors, Syringe, Heart, Star, Smile, Hand, Users } from 'lucide-react';
 
-export default function Home() {
+// useSearchParams()를 사용하는 컴포넌트를 Suspense로 감싸기 위한 내부 컴포넌트
+function HomeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
@@ -192,5 +193,21 @@ export default function Home() {
         </div>
       </div>
     </div>
+  );
+}
+
+// useSearchParams() 사용으로 인한 정적 생성 에러 방지 - Suspense로 감싸기
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-b from-rose-50 via-white to-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">로딩 중...</p>
+        </div>
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
   );
 }

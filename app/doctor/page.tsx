@@ -1,15 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Search, MapPin, Stethoscope, Briefcase, X, Building2, ChevronRight, Home } from 'lucide-react';
 import DoctorRepository, { type DoctorWithHospital } from '@/app/admin/doctor/repository/DoctorRepository';
 import { Department } from '@/app/common/model/Department';
 
-// useSearchParams() 사용으로 인한 정적 생성 에러 방지 - 페이지를 동적으로 렌더링
-export const dynamic = 'force-dynamic';
-
-export default function DoctorsPage() {
+// useSearchParams()를 사용하는 컴포넌트를 Suspense로 감싸기 위한 내부 컴포넌트
+function DoctorsPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -299,5 +297,21 @@ export default function DoctorsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// useSearchParams() 사용으로 인한 정적 생성 에러 방지 - Suspense로 감싸기
+export default function DoctorsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">로딩 중...</p>
+        </div>
+      </div>
+    }>
+      <DoctorsPageContent />
+    </Suspense>
   );
 }
