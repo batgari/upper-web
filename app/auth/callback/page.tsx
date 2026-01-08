@@ -37,6 +37,7 @@ export default function AuthCallback() {
         if (mode === 'signup') {
           if (userExists) {
             // 이미 가입된 사용자
+            await supabase.auth.signOut();
             sessionStorage.removeItem('auth_mode');
             router.replace('/?message=already_registered');
           } else {

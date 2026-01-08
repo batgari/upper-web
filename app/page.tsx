@@ -22,7 +22,7 @@ function HomeContent() {
           alert('환영합니다! Upper에 가입되었습니다.');
           break;
         case 'already_registered':
-          //alert('이미 가입된 계정입니다. 로그인을 이용해주세요.');
+          alert('이미 가입된 계정입니다. 로그인을 이용해주세요.');
           break;
         case 'signup_required':
           alert('회원가입이 필요합니다. 먼저 회원가입을 진행해주세요.');
