@@ -14,14 +14,18 @@ export default function AdminLayout({
   const pathname = usePathname();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { isAdmin, loading } = useAuth();
+  const { isAdmin, loading, user } = useAuth();
 
   useEffect(() => {
     if (!loading && !isAdmin) {
-      alert('관리자만 접근할 수 있습니다.');
+      // 로그인했지만 관리자가 아닌 경우에만 alert 표시
+      // 로그아웃 상태(user가 null)에서는 alert 없이 리다이렉트
+      if (user !== null) {
+        alert('관리자만 접근할 수 있습니다.');
+      }
       router.push('/');
     }
-  }, [isAdmin, loading, router]);
+  }, [isAdmin, loading, user, router]);
 
   if (loading) {
     return (
