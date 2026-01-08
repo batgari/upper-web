@@ -36,16 +36,9 @@ export default function AuthCallback() {
 
         if (mode === 'signup') {
           if (userExists) {
-            // 이미 가입된 사용자
-            try {
-              await supabase.auth.signOut({ scope: 'local' });
-            } catch (err) {
-              // 403 에러 등은 무시하고 계속 진행
-            }
+            // 이미 가입된 사용자 → 그냥 로그인 처리
             sessionStorage.removeItem('auth_mode');
-            // NavBar 상태 업데이트를 위해 약간의 지연 후 페이지 이동
-            await new Promise(resolve => setTimeout(resolve, 100));
-            window.location.href = '/?message=already_registered';
+            router.replace('/');
             return;
           } else {
             // 신규 회원가입: users 테이블에 레코드 생성
