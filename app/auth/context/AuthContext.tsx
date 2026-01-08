@@ -101,8 +101,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
+    // 세션이 있는지 먼저 확인
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    // 세션이 없으면 이미 로그아웃된 상태이므로 에러를 던지지 않음
+    if (!session) {
+      return;
+    }
+    
     const { error } = await supabase.auth.signOut();
     if (error) {
+      // AuthSessionMissingError는 무시 (이미 세션 확인했지만, 타이밍 이슈로 발생할 수 있음)
+      if (error.message?.includes('Auth session missing') || error.name === 'AuthSessionMissingError') {
+        return;
+      }
       throw error;
     }
   };
