@@ -39,7 +39,10 @@ export default function AuthCallback() {
             // 이미 가입된 사용자
             await supabase.auth.signOut();
             sessionStorage.removeItem('auth_mode');
-            router.replace('/?message=already_registered');
+            // NavBar 상태 업데이트를 위해 약간의 지연 후 페이지 이동
+            await new Promise(resolve => setTimeout(resolve, 100));
+            window.location.href = '/?message=already_registered';
+            return;
           } else {
             // 신규 회원가입: users 테이블에 레코드 생성
             try {
@@ -57,7 +60,10 @@ export default function AuthCallback() {
             // 미가입 사용자
             await supabase.auth.signOut();
             sessionStorage.removeItem('auth_mode');
-            router.replace('/?message=signup_required');
+            // 상태 업데이트를 위해 약간의 지연 후 페이지 이동
+            await new Promise(resolve => setTimeout(resolve, 100));
+            window.location.href = '/?message=signup_required';
+            return;
           } else {
             // 정상 로그인
             sessionStorage.removeItem('auth_mode');
