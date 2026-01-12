@@ -50,10 +50,10 @@ export default function DoctorsPage() {
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    const selectedCareAreas = formData.getAll('specialized_area') as string[];
+    const selectedCareAreas = formData.getAll('specialized_areass') as string[];
     const doctorData = {
       name: formData.get('name') as string,
-      specialized_area: selectedCareAreas,
+      specialized_areas: selectedCareAreas,
       hospital_id: formData.get('hospital_id') as string,
       experience_years: parseInt(formData.get('experience_years') as string),
       available_hours: formData.get('available_hours') as string,
@@ -154,7 +154,7 @@ export default function DoctorsPage() {
                   {doctors.map((doctor) => (
                     <tr key={doctor.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{doctor.name}</td>
-                      <td className="px-6 py-4 text-sm text-gray-500">{doctor.specialized_area?.map(area => CareArea.getLabel(area as CareArea)).join(', ') || '-'}</td>
+                      <td className="px-6 py-4 text-sm text-gray-500">{doctor.specialized_areas?.map(area => CareArea.getLabel(area as CareArea)).join(', ') || '-'}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.hospital?.name}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.hospital?.region}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.experience_years}년</td>
@@ -212,7 +212,7 @@ export default function DoctorsPage() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-500">전문 분야:</span>
-                    <span className="font-medium text-gray-900">{doctor.specialized_area?.map(area => CareArea.getLabel(area as CareArea)).join(', ') || '-'}</span>
+                    <span className="font-medium text-gray-900">{doctor.specialized_areas?.map(area => CareArea.getLabel(area as CareArea)).join(', ') || '-'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-500">병원:</span>
@@ -279,9 +279,9 @@ export default function DoctorsPage() {
                     <label key={area} className="flex items-center gap-2 cursor-pointer">
                       <input
                         type="checkbox"
-                        name="specialized_area"
+                        name="specialized_areas"
                         value={area}
-                        defaultChecked={selectedDoctor?.specialized_area?.includes(area)}
+                        defaultChecked={selectedDoctor?.specialized_areas?.includes(area)}
                         className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                       />
                       <span className="text-sm text-gray-700">{CareArea.getLabel(area)}</span>

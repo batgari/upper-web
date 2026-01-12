@@ -179,7 +179,7 @@ function DoctorsPageContent() {
               <div className="p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <Stethoscope className="w-4 h-4 text-rose-500" />
-                  <h3 className="text-sm font-bold text-gray-900">전문 분야</h3>
+                  <h3 className="text-sm font-bold text-gray-900">시술 분야</h3>
                 </div>
                 <div className="space-y-0.5 max-h-72 overflow-y-auto">
                   {careAreas.map((careArea) => (
@@ -252,14 +252,14 @@ function DoctorsPageContent() {
                           <h3 className="font-bold text-base sm:text-lg text-gray-900">
                             {doctor.name}
                           </h3>
-                          {doctor.specialized_area?.slice(0, 2).map((area) => (
+                          {doctor.specialized_areas?.slice(0, 2).map((area) => (
                             <span key={area} className="px-2 py-0.5 bg-rose-100 text-rose-700 rounded text-xs font-medium">
                               {CareArea.getLabel(area as CareArea)}
                             </span>
                           ))}
-                          {doctor.specialized_area && doctor.specialized_area.length > 2 && (
+                          {doctor.specialized_areas && doctor.specialized_areas.length > 2 && (
                             <span className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-xs font-medium">
-                              +{doctor.specialized_area.length - 2}
+                              +{doctor.specialized_areas.length - 2}
                             </span>
                           )}
                         </div>

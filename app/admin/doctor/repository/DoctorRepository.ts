@@ -22,7 +22,7 @@ class DoctorRepository {
       .select('*, hospital:hospitals(*)');
 
     if (filters.careArea) {
-      query = query.contains('specialized_area', [filters.careArea]);
+      query = query.contains('specialized_areas', [filters.careArea]);
     }
     if (filters.query) {
       query = query.ilike('name', `%${filters.query}%`);

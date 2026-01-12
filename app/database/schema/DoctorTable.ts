@@ -6,11 +6,11 @@ export interface DoctorTable {
     id: string
     created_at: string
     name: string
-    aspired_beauty: string[]  // 추구하는 beauty
-    care_philosophy: string | null  // 진료 철학
-    clinical_experience: string[]  // 임상 경력
-    specialist_experience: string[]  // 전문의 취득 후 임상 경력
-    specialized_area: CareArea[]  // 전문 분야
+    aspired_beauties: string[]  // 추구하는 beauty
+    care_philosophies: string | null  // 진료 철학
+    clinical_experiences: string[]  // 임상 경력
+    specialist_experiences: string[]  // 전문의 취득 후 임상 경력
+    specialized_areas: CareArea[]  // 전문 분야
     languages: Language[]  // 구사 가능 언어
     hospital_id: string
     photo_url: string | null
@@ -21,11 +21,11 @@ export interface DoctorTable {
     id?: string
     created_at?: string
     name: string
-    aspired_beauty?: string[]
-    care_philosophy?: string | null
-    clinical_experience?: string[]
-    specialist_experience?: string[]
-    specialized_area?: CareArea[]
+    aspired_beauties?: string[]
+    care_philosophies?: string | null
+    clinical_experiences?: string[]
+    specialist_experiences?: string[]
+    specialized_areas?: CareArea[]
     languages?: Language[]
     hospital_id: string
     photo_url?: string | null
@@ -36,11 +36,11 @@ export interface DoctorTable {
     id?: string
     created_at?: string
     name?: string
-    aspired_beauty?: string[]
-    care_philosophy?: string | null
-    clinical_experience?: string[]
-    specialist_experience?: string[]
-    specialized_area?: CareArea[]
+    aspired_beauties?: string[]
+    care_philosophies?: string | null
+    clinical_experiences?: string[]
+    specialist_experiences?: string[]
+    specialized_areas?: CareArea[]
     languages?: Language[]
     hospital_id?: string
     photo_url?: string | null

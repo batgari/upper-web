@@ -35,11 +35,11 @@ CREATE TABLE IF NOT EXISTS doctors (
   experience_years INTEGER,
   available_hours TEXT,
   -- 추가 필드
-  aspired_beauty TEXT[] DEFAULT '{}',           -- 추구하는 beauty
-  care_philosophy TEXT,                          -- 진료 철학
-  clinical_experience TEXT[] DEFAULT '{}',       -- 임상 경력
-  specialist_experience TEXT[] DEFAULT '{}',     -- 전문의 취득 후 임상 경력
-  specialized_area TEXT[] DEFAULT '{}',          -- 전문 분야 (최대 40글자)
+  aspired_beauties TEXT[] DEFAULT '{}',           -- 추구하는 beauty
+  care_philosophies TEXT,                          -- 진료 철학
+  clinical_experiences TEXT[] DEFAULT '{}',       -- 임상 경력
+  specialist_experiences TEXT[] DEFAULT '{}',     -- 전문의 취득 후 임상 경력
+  specialized_areas TEXT[] DEFAULT '{}',          -- 전문 분야 (최대 40글자)
   languages TEXT[] DEFAULT '{}'                  -- 언어 (최대 40글자)
 );
 
@@ -53,7 +53,7 @@ CREATE INDEX IF NOT EXISTS idx_doctors_hospital_id ON doctors(hospital_id);
 CREATE INDEX IF NOT EXISTS idx_hospitals_region ON hospitals(region);
 
 -- 배열 검색용 GIN 인덱스
-CREATE INDEX IF NOT EXISTS idx_doctors_specialized_area ON doctors USING GIN (specialized_area);
+CREATE INDEX IF NOT EXISTS idx_doctors_specialized_areas ON doctors USING GIN (specialized_areas);
 CREATE INDEX IF NOT EXISTS idx_doctors_languages ON doctors USING GIN (languages);
 
 -- =====================================================
@@ -77,8 +77,8 @@ ON CONFLICT (id) DO NOTHING;
 
 -- 의사 데이터
 INSERT INTO doctors (
-  id, name, aspired_beauty, care_philosophy, clinical_experience,
-  specialist_experience, specialized_area, languages, hospital_id,
+  id, name, aspired_beauties, care_philosophies, clinical_experiences,
+  specialist_experiences, specialized_areas, languages, hospital_id,
   experience_years
 ) VALUES
 -- 의사 1: 김민수
@@ -217,10 +217,10 @@ ON CONFLICT (id) DO NOTHING;
 -- 배열 검색 쿼리 예시
 -- =====================================================
 -- 특정 전문 분야를 가진 의사 검색
--- SELECT * FROM doctors WHERE 'EYEAREA_DARKCIRCLES' = ANY(specialized_area);
+-- SELECT * FROM doctors WHERE 'EYEAREA_DARKCIRCLES' = ANY(specialized_areas);
 
 -- 특정 언어를 구사하는 의사 검색
 -- SELECT * FROM doctors WHERE 'ENGLISH' = ANY(languages);
 
 -- 여러 전문 분야를 모두 가진 의사 검색
--- SELECT * FROM doctors WHERE specialized_area @> ARRAY['EYEAREA_DARKCIRCLES', 'EYEAREA_WRINKLES'];
+-- SELECT * FROM doctors WHERE specialized_areas @> ARRAY['EYEAREA_DARKCIRCLES', 'EYEAREA_WRINKLES'];
