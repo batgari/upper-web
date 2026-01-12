@@ -60,3 +60,5 @@ export namespace Language {
     return Object.values(Language);
   }
 }
+
+export default Language;

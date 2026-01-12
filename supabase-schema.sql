@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS doctors (
   care_philosophy TEXT,                          -- 진료 철학
   clinical_experience TEXT[] DEFAULT '{}',       -- 임상 경력
   specialist_experience TEXT[] DEFAULT '{}',     -- 전문의 취득 후 임상 경력
-  specialized_area TEXT[] DEFAULT '{}',          -- 전문 분야 (최대 30글자)
-  languages TEXT[] DEFAULT '{}'                  -- 언어 (최대 30글자)
+  specialized_area TEXT[] DEFAULT '{}',          -- 전문 분야 (최대 40글자)
+  languages TEXT[] DEFAULT '{}'                  -- 언어 (최대 40글자)
 );
 
 -- =====================================================

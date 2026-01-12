@@ -1,6 +1,5 @@
-// 고정된 값 타입 (최대 30글자)
-export type CareArea = string;
-export type Language = string;
+import CareArea from '@/app/common/model/CareArea';
+import Language from '@/app/common/model/Language';
 
 export interface DoctorTable {
   Row: {
