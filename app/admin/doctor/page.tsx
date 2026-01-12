@@ -50,7 +50,7 @@ export default function DoctorsPage() {
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    const selectedCareAreas = formData.getAll('specialized_areass') as string[];
+    const selectedCareAreas = formData.getAll('specialized_areas') as string[];
     const doctorData = {
       name: formData.get('name') as string,
       specialized_areas: selectedCareAreas,
