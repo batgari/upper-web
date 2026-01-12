@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS hospitals (
   name TEXT NOT NULL,
   address TEXT NOT NULL,
   phone TEXT NOT NULL,
-  region TEXT NOT NULL
+  region TEXT NOT NULL,
+  homepage TEXT                                   -- 병원 홈페이지 URL
 );
 
 -- 의사 테이블

@@ -6,6 +6,7 @@ export interface HospitalTable {
     address: string
     phone: string
     region: string
+    homepage: string | null
   }
   Insert: {
     id?: string
@@ -14,6 +15,7 @@ export interface HospitalTable {
     address: string
     phone: string
     region: string
+    homepage?: string | null
   }
   Update: {
     id?: string
@@ -22,6 +24,7 @@ export interface HospitalTable {
     address?: string
     phone?: string
     region?: string
+    homepage?: string | null
   }
 }
 

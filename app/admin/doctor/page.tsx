@@ -55,7 +55,6 @@ export default function DoctorsPage() {
       specialty: formData.get('specialty') as string,
       sub_specialty: formData.get('sub_specialty') as string,
       hospital_id: formData.get('hospital_id') as string,
-      bio: formData.get('bio') as string,
       experience_years: parseInt(formData.get('experience_years') as string),
       available_hours: formData.get('available_hours') as string,
       photo_url: formData.get('photo_url') as string || null,
@@ -326,16 +325,6 @@ export default function DoctorsPage() {
                     </option>
                   ))}
                 </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">소개</label>
-                <textarea
-                  name="bio"
-                  rows={3}
-                  defaultValue={selectedDoctor?.bio || ''}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
               </div>
 
               <div>

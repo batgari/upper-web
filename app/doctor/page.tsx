@@ -279,11 +279,6 @@ function DoctorsPageContent() {
                           )}
                         </div>
 
-                        {doctor.bio && (
-                          <p className="text-xs text-gray-500 mt-2 line-clamp-1 hidden sm:block">
-                            {doctor.bio}
-                          </p>
-                        )}
                       </div>
 
                       {/* 화살표 */}
