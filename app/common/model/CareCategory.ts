@@ -41,7 +41,7 @@ export namespace CareCategory {
   }
 
   export function getAll(): CareCategory[] {
-    return Object.values(CareCategory);
+    return Object.values(CareCategory).filter((v): v is CareCategory => typeof v === 'string');
   }
 }
 

@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Search, MapPin, Stethoscope, Briefcase, X, Building2, ChevronRight, Home } from 'lucide-react';
 import DoctorRepository, { type DoctorWithHospital } from '@/app/admin/doctor/repository/DoctorRepository';
-import { Department } from '@/app/common/model/Department';
+import CareArea from '@/app/common/model/CareArea';
 
 // useSearchParams()를 사용하는 컴포넌트를 Suspense로 감싸기 위한 내부 컴포넌트
 function DoctorsPageContent() {
@@ -15,8 +15,8 @@ function DoctorsPageContent() {
   const [selectedRegions, setSelectedRegions] = useState<string[]>(
     searchParams.get('region') ? [searchParams.get('region')!] : []
   );
-  const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>(
-    searchParams.get('specialty') ? [searchParams.get('specialty')!] : []
+  const [selectedCareAreas, setSelectedCareAreas] = useState<string[]>(
+    searchParams.get('careArea') ? [searchParams.get('careArea')!] : []
   );
   const [doctors, setDoctors] = useState<DoctorWithHospital[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +29,7 @@ function DoctorsPageContent() {
     '부산 서면', '대구 동성로', '인천', '대전', '광주'
   ];
 
-  const specialties = Object.values(Department).sort();
+  const careAreas = Object.values(CareArea).filter((v): v is CareArea => typeof v === 'string');
 
   useEffect(() => {
     async function fetchDoctors() {
@@ -39,7 +39,7 @@ function DoctorsPageContent() {
 
         const data = await DoctorRepository.search({
           region: selectedRegions.length > 0 ? selectedRegions[0] : undefined,
-          specialty: selectedSpecialties.length > 0 ? selectedSpecialties[0] : undefined,
+          careArea: selectedCareAreas.length > 0 ? selectedCareAreas[0] : undefined,
           query: searchQuery || undefined,
         });
 
@@ -53,7 +53,7 @@ function DoctorsPageContent() {
     }
 
     fetchDoctors();
-  }, [searchQuery, selectedRegions, selectedSpecialties]);
+  }, [searchQuery, selectedRegions, selectedCareAreas]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,19 +65,19 @@ function DoctorsPageContent() {
     );
   };
 
-  const toggleSpecialty = (specialty: string) => {
-    setSelectedSpecialties(prev =>
-      prev.includes(specialty) ? prev.filter(s => s !== specialty) : [specialty]
+  const toggleCareArea = (careArea: string) => {
+    setSelectedCareAreas(prev =>
+      prev.includes(careArea) ? prev.filter(s => s !== careArea) : [careArea]
     );
   };
 
   const clearFilters = () => {
     setSelectedRegions([]);
-    setSelectedSpecialties([]);
+    setSelectedCareAreas([]);
     setSearchQuery('');
   };
 
-  const activeFilterCount = selectedRegions.length + selectedSpecialties.length;
+  const activeFilterCount = selectedRegions.length + selectedCareAreas.length;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -124,14 +124,14 @@ function DoctorsPageContent() {
                     <X className="w-3 h-3" />
                   </button>
                 ))}
-                {selectedSpecialties.map(specialty => (
+                {selectedCareAreas.map(careArea => (
                   <button
-                    key={specialty}
-                    onClick={() => toggleSpecialty(specialty)}
+                    key={careArea}
+                    onClick={() => toggleCareArea(careArea)}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-100 text-rose-700 rounded-full text-sm font-medium hover:bg-rose-200 transition-colors"
                   >
                     <Stethoscope className="w-3 h-3" />
-                    {specialty}
+                    {CareArea.getLabel(careArea as CareArea)}
                     <X className="w-3 h-3" />
                   </button>
                 ))}
@@ -175,24 +175,24 @@ function DoctorsPageContent() {
                 </div>
               </div>
 
-              {/* Specialty Filter */}
+              {/* CareArea Filter */}
               <div className="p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <Stethoscope className="w-4 h-4 text-rose-500" />
-                  <h3 className="text-sm font-bold text-gray-900">진료과</h3>
+                  <h3 className="text-sm font-bold text-gray-900">전문 분야</h3>
                 </div>
                 <div className="space-y-0.5 max-h-72 overflow-y-auto">
-                  {specialties.map((specialty) => (
+                  {careAreas.map((careArea) => (
                     <button
-                      key={specialty}
-                      onClick={() => toggleSpecialty(specialty)}
+                      key={careArea}
+                      onClick={() => toggleCareArea(careArea)}
                       className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
-                        selectedSpecialties.includes(specialty)
+                        selectedCareAreas.includes(careArea)
                           ? 'bg-rose-500 text-white font-medium'
                           : 'text-gray-600 hover:bg-gray-50'
                       }`}
                     >
-                      {specialty}
+                      {CareArea.getLabel(careArea)}
                     </button>
                   ))}
                 </div>
@@ -248,13 +248,20 @@ function DoctorsPageContent() {
 
                       {/* 의사 정보 */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
                           <h3 className="font-bold text-base sm:text-lg text-gray-900">
                             {doctor.name}
                           </h3>
-                          <span className="px-2 py-0.5 bg-rose-100 text-rose-700 rounded text-xs font-medium">
-                            {doctor.specialty}
-                          </span>
+                          {doctor.specialized_area?.slice(0, 2).map((area) => (
+                            <span key={area} className="px-2 py-0.5 bg-rose-100 text-rose-700 rounded text-xs font-medium">
+                              {CareArea.getLabel(area as CareArea)}
+                            </span>
+                          ))}
+                          {doctor.specialized_area && doctor.specialized_area.length > 2 && (
+                            <span className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-xs font-medium">
+                              +{doctor.specialized_area.length - 2}
+                            </span>
+                          )}
                         </div>
 
                         {doctor.hospital && (

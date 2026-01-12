@@ -8,7 +8,6 @@ export interface DoctorWithHospital extends Doctor {
 
 export interface DoctorSearchFilters {
   region?: string;
-  specialty?: string;
-  subSpecialty?: string;
+  careArea?: string;
   query?: string;
 }

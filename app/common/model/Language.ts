@@ -57,7 +57,7 @@ export namespace Language {
   }
 
   export function getAll(): Language[] {
-    return Object.values(Language);
+    return Object.values(Language).filter((v): v is Language => typeof v === 'string');
   }
 }
 

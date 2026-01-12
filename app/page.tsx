@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Search, Sparkles, MapPin, Eye, Scissors, Syringe, Heart, Star, Smile, Hand, Users } from 'lucide-react';
+import { Search, Sparkles, MapPin, Users } from 'lucide-react';
+import CareCategory from '@/app/common/model/CareCategory';
 
 // useSearchParams()를 사용하는 컴포넌트를 Suspense로 감싸기 위한 내부 컴포넌트
 function HomeContent() {
@@ -46,25 +47,16 @@ function HomeContent() {
     }
   };
 
-  const handleCategoryClick = (category: string) => {
-    router.push(`/doctor?query=${encodeURIComponent(category)}`);
+  const handleCategoryClick = (category: CareCategory) => {
+    router.push(`/doctor?careArea=${encodeURIComponent(category)}`);
   };
 
   const handleRegionClick = (region: string) => {
     router.push(`/doctor?region=${encodeURIComponent(region)}`);
   };
 
-  // 시술 카테고리 (plan.md 요구사항)
-  const procedureCategories = [
-    { name: '눈 성형', icon: Eye, color: 'from-pink-500 to-rose-500' },
-    { name: '코 성형', icon: Sparkles, color: 'from-purple-500 to-indigo-500' },
-    { name: '지방 성형', icon: Heart, color: 'from-orange-500 to-red-500' },
-    { name: '보톡스', icon: Syringe, color: 'from-cyan-500 to-blue-500' },
-    { name: '필러', icon: Star, color: 'from-emerald-500 to-teal-500' },
-    { name: '리프팅', icon: Hand, color: 'from-violet-500 to-purple-500' },
-    { name: '피부시술', icon: Smile, color: 'from-amber-500 to-orange-500' },
-    { name: '윤곽성형', icon: Scissors, color: 'from-rose-500 to-pink-500' },
-  ];
+  // CareCategory 목록
+  const careCategories = CareCategory.getAll();
 
   // 미용 분야 주요 지역 (plan.md 요구사항)
   const beautyRegions = [
@@ -120,31 +112,23 @@ function HomeContent() {
         </div>
       </div>
 
-      {/* Procedure Categories Section */}
+      {/* Care Categories Section */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex items-center gap-2 mb-6">
           <Sparkles className="w-5 h-5 text-rose-500" />
           <h2 className="text-lg font-bold text-gray-900">시술 분야</h2>
         </div>
 
-        <div className="grid grid-cols-4 gap-3 sm:gap-4">
-          {procedureCategories.map((category) => {
-            const IconComponent = category.icon;
-            return (
-              <button
-                key={category.name}
-                onClick={() => handleCategoryClick(category.name)}
-                className="group flex flex-col items-center p-4 sm:p-5 bg-white border border-gray-100 rounded-2xl hover:border-rose-200 hover:shadow-lg transition-all duration-200"
-              >
-                <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br ${category.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
-                  <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
-                </div>
-                <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-gray-900 text-center">
-                  {category.name}
-                </span>
-              </button>
-            );
-          })}
+        <div className="flex flex-wrap gap-2.5">
+          {careCategories.map((category) => (
+            <button
+              key={category}
+              onClick={() => handleCategoryClick(category)}
+              className="px-4 py-2.5 bg-white border border-gray-200 rounded-full text-sm font-medium text-gray-700 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+            >
+              {CareCategory.getLabel(category)}
+            </button>
+          ))}
         </div>
       </div>
 

@@ -21,8 +21,8 @@ class DoctorRepository {
       .from('doctors')
       .select('*, hospital:hospitals(*)');
 
-    if (filters.specialty) {
-      query = query.eq('specialty', filters.specialty);
+    if (filters.careArea) {
+      query = query.contains('specialized_area', [filters.careArea]);
     }
     if (filters.query) {
       query = query.ilike('name', `%${filters.query}%`);

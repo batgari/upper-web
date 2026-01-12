@@ -7,7 +7,7 @@ import type { DoctorInsert } from '@/app/database/schema/DoctorTable';
 import type { DoctorWithHospital } from './model/DoctorTypes';
 import HospitalRepository from '@/app/admin/hospital/repository/HospitalRepository';
 import DoctorRepository from './repository/DoctorRepository';
-import { Department } from '@/app/common/model/Department';
+import CareArea from '@/app/common/model/CareArea';
 
 export default function DoctorsPage() {
   const [showDoctorModal, setShowDoctorModal] = useState(false);
@@ -50,10 +50,10 @@ export default function DoctorsPage() {
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
+    const selectedCareAreas = formData.getAll('specialized_area') as string[];
     const doctorData = {
       name: formData.get('name') as string,
-      specialty: formData.get('specialty') as string,
-      sub_specialty: formData.get('sub_specialty') as string,
+      specialized_area: selectedCareAreas,
       hospital_id: formData.get('hospital_id') as string,
       experience_years: parseInt(formData.get('experience_years') as string),
       available_hours: formData.get('available_hours') as string,
@@ -143,8 +143,7 @@ export default function DoctorsPage() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">이름</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">진료과</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">세부 전공</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">전문 분야</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">병원</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">지역</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">경력</th>
@@ -155,8 +154,7 @@ export default function DoctorsPage() {
                   {doctors.map((doctor) => (
                     <tr key={doctor.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{doctor.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.specialty}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.sub_specialty || '-'}</td>
+                      <td className="px-6 py-4 text-sm text-gray-500">{doctor.specialized_area?.map(area => CareArea.getLabel(area as CareArea)).join(', ') || '-'}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.hospital?.name}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.hospital?.region}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.experience_years}년</td>
@@ -213,15 +211,9 @@ export default function DoctorsPage() {
                 </div>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">진료과:</span>
-                    <span className="font-medium text-gray-900">{doctor.specialty}</span>
+                    <span className="text-gray-500">전문 분야:</span>
+                    <span className="font-medium text-gray-900">{doctor.specialized_area?.map(area => CareArea.getLabel(area as CareArea)).join(', ') || '-'}</span>
                   </div>
-                  {doctor.sub_specialty && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">세부 전공:</span>
-                      <span className="text-gray-700">{doctor.sub_specialty}</span>
-                    </div>
-                  )}
                   <div className="flex justify-between">
                     <span className="text-gray-500">병원:</span>
                     <span className="text-gray-700">{doctor.hospital?.name}</span>
@@ -280,33 +272,21 @@ export default function DoctorsPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">진료과 *</label>
-                  <select
-                    name="specialty"
-                    required
-                    defaultValue={selectedDoctor?.specialty || ''}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="">선택</option>
-                    {Object.values(Department).sort().map((dept) => (
-                      <option key={dept} value={dept}>
-                        {dept}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">세부 전공</label>
-                  <input
-                    type="text"
-                    name="sub_specialty"
-                    placeholder="예: 심장내과, 척추"
-                    defaultValue={selectedDoctor?.sub_specialty || ''}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">전문 분야 *</label>
+                <div className="max-h-48 overflow-y-auto border border-gray-300 rounded-lg p-3 space-y-2">
+                  {Object.values(CareArea).filter((v): v is CareArea => typeof v === 'string').map((area) => (
+                    <label key={area} className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="specialized_area"
+                        value={area}
+                        defaultChecked={selectedDoctor?.specialized_area?.includes(area)}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <span className="text-sm text-gray-700">{CareArea.getLabel(area)}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
 

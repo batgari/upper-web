@@ -199,7 +199,7 @@ export namespace CareArea {
   }
 
   export function getCareAreaByCareCategory(careCategory: CareCategory): CareArea[] {
-    return (Object.values(CareArea) as string[]).filter(area => area.startsWith(careCategory));
+    return Object.values(CareArea).filter((v): v is CareArea => typeof v === 'string' && v.startsWith(careCategory));
   }
 }
 
