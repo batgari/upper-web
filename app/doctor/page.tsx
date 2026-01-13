@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Search, MapPin, Stethoscope, Briefcase, X, Building2, ChevronRight, Home } from 'lucide-react';
+import { Search, MapPin, Stethoscope, X, Building2, ChevronRight, Home } from 'lucide-react';
 import DoctorRepository, { type DoctorWithHospital } from '@/app/admin/doctor/repository/DoctorRepository';
 import CareArea from '@/app/common/model/CareArea';
 
@@ -272,12 +272,6 @@ function DoctorsPageContent() {
                         )}
 
                         <div className="flex items-center gap-3 text-xs text-gray-500">
-                          {doctor.experience_years && (
-                            <span className="flex items-center gap-1">
-                              <Briefcase className="w-3 h-3" />
-                              경력 {doctor.experience_years}년
-                            </span>
-                          )}
                           {doctor.hospital?.address && (
                             <span className="flex items-center gap-1 truncate">
                               <MapPin className="w-3 h-3" />

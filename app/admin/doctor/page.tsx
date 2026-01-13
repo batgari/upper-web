@@ -131,7 +131,6 @@ export default function DoctorsPage() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">전문 분야</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">병원</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">지역</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">경력</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">작업</th>
                   </tr>
                 </thead>
@@ -144,7 +143,6 @@ export default function DoctorsPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.hospital?.name}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.hospital?.region}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{doctor.experience_years}년</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <div className="flex gap-2">
                           <button
@@ -177,7 +175,6 @@ export default function DoctorsPage() {
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex-1">
                     <h3 className="text-lg font-bold text-gray-900">{doctor.name}</h3>
-                    <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mt-1">{doctor.experience_years}년</span>
                   </div>
                   <div className="flex gap-2">
                     <button

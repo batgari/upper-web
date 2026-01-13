@@ -197,8 +197,6 @@ export default function ModifyDoctorModal({
       name: formData.get('name') as string,
       specialized_areas: Array.from(selectedSpecializedAreas),
       hospital_id: formData.get('hospital_id') as string,
-      experience_years: parseInt(formData.get('experience_years') as string),
-      available_hours: formData.get('available_hours') as string,
       photo_url: formData.get('photo_url') as string || null,
       aspired_beauties: aspiredBeauties.filter(b => b.trim()),
       care_philosophies: formData.get('care_philosophies') as string || null,
@@ -259,20 +257,7 @@ export default function ModifyDoctorModal({
             />
           </div>
 
-          {/* 2. 경력 */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">경력 (년) *</label>
-            <input
-              type="number"
-              name="experience_years"
-              required
-              min="0"
-              defaultValue={doctor?.experience_years || ''}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          {/* 3. 프로필 사진 URL */}
+          {/* 2. 프로필 사진 URL */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">프로필 사진 URL</label>
             <input

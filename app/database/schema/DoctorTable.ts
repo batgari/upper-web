@@ -14,8 +14,6 @@ export interface DoctorTable {
     languages: Language[]  // 구사 가능 언어
     hospital_id: string
     photo_url: string | null
-    experience_years: number | null
-    available_hours: string | null
   }
   Insert: {
     id?: string
@@ -29,8 +27,6 @@ export interface DoctorTable {
     languages?: Language[]
     hospital_id: string
     photo_url?: string | null
-    experience_years?: number | null
-    available_hours?: string | null
   }
   Update: {
     id?: string
@@ -44,8 +40,6 @@ export interface DoctorTable {
     languages?: Language[]
     hospital_id?: string
     photo_url?: string | null
-    experience_years?: number | null
-    available_hours?: string | null
   }
 }
 
