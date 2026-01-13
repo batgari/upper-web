@@ -36,7 +36,6 @@ export default function AdminPage() {
     <div className="p-4 md:p-8">
       <div className="mb-6 md:mb-8">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900">대시보드</h1>
-        <p className="text-gray-500 mt-1 text-sm md:text-base">Upper 관리자 대시보드</p>
       </div>
 
       {/* 통계 카드 */}

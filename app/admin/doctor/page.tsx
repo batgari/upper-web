@@ -107,7 +107,6 @@ export default function DoctorsPage() {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 md:mb-8">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">의사 관리</h1>
-          <p className="text-gray-500 mt-1 text-sm md:text-base">등록된 의사 목록을 관리합니다</p>
         </div>
         <button
           onClick={handleAddDoctor}
