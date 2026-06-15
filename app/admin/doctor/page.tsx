@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, X } from 'lucide-react';
 import type { Hospital } from '@/app/database/schema/HospitalTable';
 import type { DoctorWithHospital } from './model/DoctorTypes';
 import HospitalRepository from '@/app/admin/hospital/repository/HospitalRepository';
@@ -16,6 +16,11 @@ export default function DoctorsPage() {
   const [doctors, setDoctors] = useState<DoctorWithHospital[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // 필터 상태
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedRegion, setSelectedRegion] = useState('');
+  const [selectedCareArea, setSelectedCareArea] = useState('');
+
   // 모달 상태
   const [showDoctorModal, setShowDoctorModal] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
@@ -24,6 +29,19 @@ export default function DoctorsPage() {
   // 삭제 다이얼로그 상태
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [doctorToDelete, setDoctorToDelete] = useState<DoctorWithHospital | null>(null);
+
+  // 지역 목록 (병원에서 동적 추출)
+  const regions = [...new Set(hospitals.map((h) => h.region).filter(Boolean))].sort();
+
+  // 필터 활성화 여부
+  const isFiltered = searchQuery !== '' || selectedRegion !== '' || selectedCareArea !== '';
+
+  // 필터 초기화
+  const handleResetFilters = () => {
+    setSearchQuery('');
+    setSelectedRegion('');
+    setSelectedCareArea('');
+  };
 
   // 병원 목록 불러오기
   const fetchHospitals = async () => {
@@ -35,10 +53,19 @@ export default function DoctorsPage() {
     }
   };
 
-  // 의사 목록 불러오기
+  // 의사 목록 불러오기 (필터 적용)
   const fetchDoctors = async () => {
     try {
-      const data = await DoctorRepository.fetchAll();
+      let data: DoctorWithHospital[];
+      if (isFiltered) {
+        data = await DoctorRepository.search({
+          query: searchQuery || undefined,
+          region: selectedRegion || undefined,
+          careArea: selectedCareArea || undefined,
+        });
+      } else {
+        data = await DoctorRepository.fetchAll();
+      }
       setDoctors(data);
     } catch (error) {
       console.error('Failed to fetch doctors:', error);
@@ -47,8 +74,11 @@ export default function DoctorsPage() {
 
   useEffect(() => {
     fetchHospitals();
-    fetchDoctors();
   }, []);
+
+  useEffect(() => {
+    fetchDoctors();
+  }, [searchQuery, selectedRegion, selectedCareArea]);
 
   // 의사 추가 클릭
   const handleAddDoctor = () => {
@@ -115,6 +145,64 @@ export default function DoctorsPage() {
           <Plus className="w-4 h-4" />
           의사 추가
         </button>
+      </div>
+
+      {/* 필터 영역 */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
+        <div className="flex flex-col sm:flex-row gap-3">
+          {/* 이름 검색 */}
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="의사 이름 검색..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* 지역 필터 */}
+          <select
+            value={selectedRegion}
+            onChange={(e) => setSelectedRegion(e.target.value)}
+            className="sm:w-40 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          >
+            <option value="">전체 지역</option>
+            {regions.map((region) => (
+              <option key={region} value={region}>{region}</option>
+            ))}
+          </select>
+
+          {/* 전문 분야 필터 */}
+          <select
+            value={selectedCareArea}
+            onChange={(e) => setSelectedCareArea(e.target.value)}
+            className="sm:w-48 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          >
+            <option value="">전체 분야</option>
+            {(Object.values(CareArea).filter((v): v is CareArea => typeof v === 'string')).map((area) => (
+              <option key={area} value={area}>{CareArea.getLabel(area)}</option>
+            ))}
+          </select>
+
+          {/* 초기화 버튼 */}
+          {isFiltered && (
+            <button
+              onClick={handleResetFilters}
+              className="flex items-center gap-1 px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap"
+            >
+              <X className="w-4 h-4" />
+              초기화
+            </button>
+          )}
+        </div>
+
+        {/* 결과 건수 */}
+        <p className="mt-2 text-xs text-gray-500">
+          {isFiltered ? `필터 결과 ` : `전체 `}
+          <span className="font-semibold text-gray-700">{doctors.length}명</span>의 의사
+        </p>
       </div>
 
       {/* 의사 목록 */}
